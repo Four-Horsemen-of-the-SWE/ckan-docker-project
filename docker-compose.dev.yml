@@ -7,6 +7,18 @@ volumes:
 
 services:
 
+  nginx:
+    container_name: ${NGINX_CONTAINER_NAME}
+    build:
+      context: nginx/
+      dockerfile: Dockerfile
+    depends_on:
+      ckan-dev:
+        condition: service_healthy
+    ports:
+      - "0.0.0.0:${NGINX_PORT_HOST}:${NGINX_PORT}"
+      - "0.0.0.0:${NGINX_SSLPORT_HOST}:${NGINX_SSLPORT}"
+
   ckan-dev:
     container_name: ${CKAN_CONTAINER_NAME}
     build:
@@ -85,3 +97,18 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "-e", "QUIT"]
+      
+  backend:
+    container_name: backend_server
+    build:
+      context: backend/
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - D:\ckan-project\datasets-with-ckan-demo-backend:/app
+    depends_on:
+      - db
+      - solr
+      - ckan-dev
+    restart: unless-stopped
