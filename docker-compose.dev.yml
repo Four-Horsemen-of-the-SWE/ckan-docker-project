@@ -18,6 +18,8 @@ services:
     ports:
       - "0.0.0.0:${NGINX_PORT_HOST}:${NGINX_PORT}"
       - "0.0.0.0:${NGINX_SSLPORT_HOST}:${NGINX_SSLPORT}"
+    volumes:
+      - ../uploads:/usr/share/nginx/html/uploads
 
   ckan-dev:
     container_name: ${CKAN_CONTAINER_NAME}
@@ -102,11 +104,11 @@ services:
     container_name: backend_server
     build:
       context: backend/
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "5001:5001"
     volumes:
-      - D:\ckan-project\datasets-with-ckan-demo-backend:/app
+      - ./backend:/app
     depends_on:
       - db
       - solr

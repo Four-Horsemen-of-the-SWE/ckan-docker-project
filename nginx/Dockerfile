@@ -9,6 +9,9 @@ COPY setup/default.conf ${NGINX_DIR}/conf.d/
 # Adjust the source and destination paths for the datasets-thumbnail folder
 COPY datasets-thumbnail /usr/share/nginx/html/uploads/datasets-thumbnail
 
+# Make a backend_upload folder
+RUN mkdir -p /usr/share/nginx/html/uploads/datasets-thumbnai
+
 RUN mkdir -p ${NGINX_DIR}/certs
 COPY setup/ckan-local.* ${NGINX_DIR}/certs/
 
