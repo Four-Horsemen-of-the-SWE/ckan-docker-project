@@ -4,6 +4,7 @@ volumes:
   ckan_storage:
   pg_data:
   solr_data:
+  thumbnails_storage:
 
 services:
 
@@ -19,7 +20,8 @@ services:
       - "0.0.0.0:${NGINX_PORT_HOST}:${NGINX_PORT}"
       - "0.0.0.0:${NGINX_SSLPORT_HOST}:${NGINX_SSLPORT}"
     volumes:
-      - ../uploads:/usr/share/nginx/html/uploads
+      - thumbnails_storage:/usr/share/nginx/html/uploads/datasets-thumbnail
+      # - "/mnt/d/ckan-project/uploads/thumbnails:/usr/share/nginx/html/uploads/datasets-thumbnail"
 
   ckan-dev:
     container_name: ${CKAN_CONTAINER_NAME}
@@ -108,8 +110,10 @@ services:
     ports:
       - "5001:5001"
     volumes:
-      - ./backend:/app
+      - /mnt/d/ckan-project/backend:/app
+      - thumbnails_storage:/mnt/d/ckan-project/uploads/thumbnails
     depends_on:
+      - nginx
       - db
       - solr
       - ckan-dev
