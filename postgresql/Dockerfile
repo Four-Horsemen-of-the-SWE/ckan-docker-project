@@ -12,4 +12,7 @@ ARG DATASTORE_READONLY_PASSWORD
 # Include extra setup scripts (eg datastore)
 ADD docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 
+COPY docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
+COPY create_table.sql /docker-entrypoint-initdb.d/
+
 EXPOSE 5432

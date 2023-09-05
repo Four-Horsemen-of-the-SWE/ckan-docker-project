@@ -4,6 +4,8 @@ volumes:
   ckan_storage:
   pg_data:
   solr_data:
+  frontend_storage:
+  backend_storage:
 
 services:
 
@@ -82,3 +84,26 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "-e", "QUIT"]
+  
+  pgadmin:
+    container_name: pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "5050:80"
+
+  backend:
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    depends_on:
+      - ckan
+      - db
+      - nginx
+    restart: unless-stopped
